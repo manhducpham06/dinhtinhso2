@@ -331,6 +331,50 @@
         .amap-legend i { width:.7rem; height:.7rem; border-radius:.25rem; display:inline-block; margin-left:.6rem; }
         .amap-legend i:first-child { margin-left:0; }
         .amap-legend i.ok { background:#10b981; } .amap-legend i.bad { background:#c8452f; } .amap-legend i.skip { background:#eadcc8; }
+
+        /* Khoá cuộn trang nền khi bảng kết quả đang mở */
+        html.result-open, html.result-open body { overflow: hidden !important; height: 100%; overscroll-behavior: none; }
+        #resultModal { height: 100vh; height: 100dvh; overscroll-behavior: contain; touch-action: none; }
+        #resultModal .result-land { touch-action: pan-y; }
+
+        /* Vòng điểm: "điểm / tổng" cùng một dòng, cân giữa vòng */
+        .ring-center { align-items:center; justify-content:center; }
+        .ring-line { display:flex; align-items:baseline; justify-content:center; gap:.12rem; line-height:1; }
+        .ring-line .ring-num { line-height:1; }
+        .ring-line .ring-den { margin:0; font-family:'Playfair Display', Georgia, serif; font-weight:700; font-size:clamp(1rem, 3.6vh, 1.6rem); color:#a07b5d; letter-spacing:.01em; }
+
+        /* Vòng điểm: số liền nhau, chữ số cùng chiều cao */
+        .ring-line .ring-num, .ring-line .ring-den { font-variant-numeric: lining-nums; font-feature-settings: "lnum" 1; }
+        .ring-line .ring-den { font-family: inherit; font-weight: 700; font-size: clamp(1.05rem, 3.8vh, 1.7rem); color: #a98263; }
+        .ring-line { gap: .22rem; transform: translateY(-1px); }
+
+        /* Tab Tổng quan / Phân tích điểm yếu */
+        .result-right { justify-content: flex-start !important; }
+        .result-right .result-actions { margin-top: auto; }
+        .rtabs { display: flex; gap: .3rem; padding: .25rem; background: rgba(255,255,255,.65); border: 1px solid #ecd9b8; border-radius: 999px; }
+        .rtabs button { flex: 1; padding: clamp(.4rem, 1.5vh, .6rem) .8rem; border-radius: 999px; font-weight: 700; font-size: clamp(.74rem, 1.9vh, .9rem); color: #8a5a12; transition: all .2s; }
+        .rtabs button.on { color: #fff; background: linear-gradient(135deg, #c98a2b, #a8321f); box-shadow: 0 6px 14px -8px rgba(168,50,31,.7); }
+        .rtab { display: flex; flex-direction: column; gap: clamp(.5rem, 1.8vh, 1.1rem); min-height: 0; }
+        .rtab[hidden] { display: none; }
+        #tabWeak { flex: 1 1 auto; overflow: hidden; }
+        .weak-box { flex: 1 1 auto; min-height: 0; overflow-y: auto; padding-right: .3rem; display: flex; flex-direction: column; gap: clamp(.4rem, 1.3vh, .7rem); scrollbar-width: thin; scrollbar-color: #d9b878 transparent; }
+        .wk-head { padding: clamp(.55rem, 1.7vh, .9rem) 1rem; border-radius: 1rem; background: linear-gradient(135deg, #fff3da, #fde3c4); border: 1px solid #ecd2a2; font-size: clamp(.78rem, 2vh, .95rem); line-height: 1.5; color: #5a3a2c; }
+        .wk-head b { color: #a8321f; }
+        .wk-row { padding: clamp(.45rem, 1.4vh, .75rem) .9rem; border-radius: .9rem; background: rgba(255,255,255,.7); border: 1px solid #efdfc3; }
+        .wk-top { display: flex; align-items: center; gap: .5rem; }
+        .wk-name { flex: 1; font-weight: 700; font-size: clamp(.76rem, 1.95vh, .92rem); color: #3a1d16; }
+        .wk-badge { font-size: .62rem; font-weight: 800; letter-spacing: .04em; padding: .15rem .5rem; border-radius: 999px; white-space: nowrap; }
+        .wk-badge.bad { background: #fbe0d8; color: #a8321f; } .wk-badge.mid { background: #fdeccb; color: #9a6410; } .wk-badge.good { background: #d9f2e6; color: #0b7a55; }
+        .wk-score { font-weight: 800; font-size: .85rem; color: #6b4a3a; min-width: 3.2rem; text-align: right; }
+        .wk-bar { height: .45rem; border-radius: 999px; background: #f0e4d0; overflow: hidden; margin-top: .35rem; }
+        .wk-bar i { display: block; height: 100%; border-radius: 999px; width: 0; transition: width .8s cubic-bezier(.2,.8,.2,1); }
+        .wk-bar i.bad { background: linear-gradient(90deg, #e0613a, #a8321f); } .wk-bar i.mid { background: linear-gradient(90deg, #e2a94d, #c98a2b); } .wk-bar i.good { background: linear-gradient(90deg, #34c08b, #0b7a55); }
+        .wk-tip { margin-top: .4rem; font-size: clamp(.7rem, 1.7vh, .8rem); color: #7a6256; line-height: 1.45; }
+        .wk-chips { margin-top: .4rem; display: flex; flex-wrap: wrap; gap: .25rem; align-items: center; font-size: .72rem; color: #86705f; }
+        .wk-chips button { min-width: 1.7rem; padding: .1rem .4rem; border-radius: .4rem; font-weight: 800; font-size: .72rem; color: #fff; background: linear-gradient(135deg, #e0613a, #a8321f); }
+        .wk-chips button.skip { background: #eadcc8; color: #7a6256; }
+        .wk-chips button:hover { filter: brightness(1.08); transform: translateY(-1px); }
+        .wk-empty { padding: 1.2rem; text-align: center; color: #86705f; font-size: .9rem; }
     </style>
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen font-sans flex flex-col antialiased selection:bg-indigo-600 selection:text-white">
@@ -581,8 +625,7 @@
                             <circle id="ringFill" class="ring-fill" cx="80" cy="80" r="68" transform="rotate(-90 80 80)" stroke-dasharray="427.26" stroke-dashoffset="427.26"/>
                         </svg>
                         <div class="ring-center">
-                            <div id="finalScore" class="ring-num">0</div>
-                            <div class="ring-den">/ <span id="scoreTotal">50</span> điểm</div>
+                            <div class="ring-line"><span id="finalScore" class="ring-num">0</span><span class="ring-den">/<span id="scoreTotal">50</span></span></div>
                         </div>
                     </div>
                     <div class="amap">
@@ -594,6 +637,11 @@
                 </div>
                 </div>
                 <div class="result-right">
+                    <div class="rtabs">
+                        <button type="button" id="tabBtnOverview" class="on" onclick="switchResultTab('overview')">Tổng quan</button>
+                        <button type="button" id="tabBtnWeak" onclick="switchResultTab('weak')">Phân tích điểm yếu</button>
+                    </div>
+                    <div id="tabOverview" class="rtab">
                     <div id="sectionBars" class="sec-bars"></div>
                     <div class="grid grid-cols-3 gap-3">
                 <div class="bg-slate-900/60 p-3 rounded-xl border border-emerald-500/20 text-center">
@@ -613,6 +661,8 @@
                 <span><svg class="ic text-indigo-400 mr-1.5" viewBox="0 0 24 24" aria-hidden="true"><line x1="10" x2="14" y1="2" y2="2"/><line x1="12" x2="15" y1="14" y2="11"/><circle cx="12" cy="14" r="8"/></svg>Thời gian hoàn thành:</span>
                 <span id="timeSpentText" class="font-bold text-slate-200">--:--</span>
             </div>
+                    </div>
+                    <div id="tabWeak" class="rtab" hidden><div id="weakBox" class="weak-box"></div></div>
                     <div class="result-actions grid grid-cols-2 gap-3">
                 <button onclick="closeResultModal()" class="w-full py-3 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold rounded-xl border border-slate-700 transition">
                     <svg class="ic mr-1.5" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg> Xem Lời Giải
@@ -660,7 +710,8 @@
     "range": [
       1,
       5
-    ]
+    ],
+    "skill": "VH"
   },
   {
     "id": 2,
@@ -678,7 +729,8 @@
     "range": [
       1,
       5
-    ]
+    ],
+    "skill": "VH"
   },
   {
     "id": 3,
@@ -696,7 +748,8 @@
     "range": [
       1,
       5
-    ]
+    ],
+    "skill": "TN"
   },
   {
     "id": 4,
@@ -714,7 +767,8 @@
     "range": [
       1,
       5
-    ]
+    ],
+    "skill": "ND"
   },
   {
     "id": 5,
@@ -732,7 +786,8 @@
     "range": [
       1,
       5
-    ]
+    ],
+    "skill": "PC"
   },
   {
     "id": 6,
@@ -750,7 +805,8 @@
     "range": [
       6,
       10
-    ]
+    ],
+    "skill": "ND"
   },
   {
     "id": 7,
@@ -768,7 +824,8 @@
     "range": [
       6,
       10
-    ]
+    ],
+    "skill": "PC"
   },
   {
     "id": 8,
@@ -786,7 +843,8 @@
     "range": [
       6,
       10
-    ]
+    ],
+    "skill": "TN"
   },
   {
     "id": 9,
@@ -804,7 +862,8 @@
     "range": [
       6,
       10
-    ]
+    ],
+    "skill": "PC"
   },
   {
     "id": 10,
@@ -822,7 +881,8 @@
     "range": [
       6,
       10
-    ]
+    ],
+    "skill": "BP"
   },
   {
     "id": 11,
@@ -840,7 +900,8 @@
     "range": [
       11,
       15
-    ]
+    ],
+    "skill": "VH"
   },
   {
     "id": 12,
@@ -858,7 +919,8 @@
     "range": [
       11,
       15
-    ]
+    ],
+    "skill": "PC"
   },
   {
     "id": 13,
@@ -876,7 +938,8 @@
     "range": [
       11,
       15
-    ]
+    ],
+    "skill": "BP"
   },
   {
     "id": 14,
@@ -894,7 +957,8 @@
     "range": [
       11,
       15
-    ]
+    ],
+    "skill": "ND"
   },
   {
     "id": 15,
@@ -912,7 +976,8 @@
     "range": [
       11,
       15
-    ]
+    ],
+    "skill": "ND"
   },
   {
     "id": 16,
@@ -930,7 +995,8 @@
     "range": [
       16,
       20
-    ]
+    ],
+    "skill": "ND"
   },
   {
     "id": 17,
@@ -948,7 +1014,8 @@
     "range": [
       16,
       20
-    ]
+    ],
+    "skill": "PC"
   },
   {
     "id": 18,
@@ -966,7 +1033,8 @@
     "range": [
       16,
       20
-    ]
+    ],
+    "skill": "PC"
   },
   {
     "id": 19,
@@ -984,7 +1052,8 @@
     "range": [
       16,
       20
-    ]
+    ],
+    "skill": "ND"
   },
   {
     "id": 20,
@@ -1002,7 +1071,8 @@
     "range": [
       16,
       20
-    ]
+    ],
+    "skill": "PC"
   },
   {
     "id": 21,
@@ -1016,7 +1086,8 @@
     "answer": 3,
     "explanation": "**Thảm thiết** là từ dùng chưa phù hợp với “câu chuyện”; theo đáp án của đề, đây là từ sai.",
     "passage": "<p><u>Cuộc đời</u> Kiều <u>phản ánh</u> <u>câu chuyện</u> <u>thảm thiết</u> của con người trong xã hội cũ.</p>",
-    "group": 21
+    "group": 21,
+    "skill": "LS"
   },
   {
     "id": 22,
@@ -1030,7 +1101,8 @@
     "answer": 2,
     "explanation": "Với chiến sĩ ngã xuống ở chiến trường, cách nói phù hợp là **hi sinh**; “từ trần” không hợp phong cách/ngữ cảnh.",
     "passage": "<p>Trong cuộc <u>kháng chiến</u> chống Pháp và chống Mỹ, nhiều <u>chiến sĩ</u> đã <u>từ trần</u> tại <u>chiến trường</u>.</p>",
-    "group": 22
+    "group": 22,
+    "skill": "LS"
   },
   {
     "id": 23,
@@ -1044,7 +1116,8 @@
     "answer": 0,
     "explanation": "Từ đúng là **huyên thuyên** (nói nhiều, lan man); “luyên thuyên” là sai.",
     "passage": "<p>Trong cuộc phỏng vấn, cô ấy nói <u>luyên thuyên</u> khiến mọi người <u>khó hiểu</u> và không thể <u>đánh giá</u> được về <u>năng lực</u> của cô ấy.</p>",
-    "group": 23
+    "group": 23,
+    "skill": "LS"
   },
   {
     "id": 24,
@@ -1058,7 +1131,8 @@
     "answer": 2,
     "explanation": "Theo đáp án của đề, phương án C (**phiêu bạt**) là từ dùng chưa chính xác trong câu.",
     "passage": "<p>Bị <u>đẩy vào</u> bước <u>đường cùng</u>, anh ấy <u>phiêu bạt</u> khắp nơi để <u>kiếm sống</u>.</p>",
-    "group": 24
+    "group": 24,
+    "skill": "LS"
   },
   {
     "id": 25,
@@ -1072,7 +1146,8 @@
     "answer": 3,
     "explanation": "Nguyễn Thi nổi tiếng với những trang viết về người dân **Nam Bộ** (Những đứa con trong gia đình), không phải Tây Nguyên.",
     "passage": "<p>Nguyễn Thi là <u>nhà văn</u> viết rất <u>thành công</u> về <u>mảnh đất</u> <u>Tây Nguyên</u>.</p>",
-    "group": 25
+    "group": 25,
+    "skill": "LS"
   },
   {
     "id": 26,
@@ -1085,7 +1160,8 @@
     ],
     "answer": 2,
     "explanation": "Đường xá, chợ búa, bếp núc đều có một tiếng mờ nghĩa (xá, búa, núc); **trường lớp** gồm hai tiếng đều rõ nghĩa.",
-    "group": 26
+    "group": 26,
+    "skill": "TN"
   },
   {
     "id": 27,
@@ -1098,7 +1174,8 @@
     ],
     "answer": 2,
     "explanation": "Câu cá mùa thu, Thương vợ, Tự tình đều là thơ Nôm Đường luật (thất ngôn bát cú); **Bài ca ngất ngưởng** viết theo thể hát nói.",
-    "group": 27
+    "group": 27,
+    "skill": "VH"
   },
   {
     "id": 28,
@@ -1111,7 +1188,8 @@
     ],
     "answer": 3,
     "explanation": "**Hàn Mặc Tử** là nhà thơ của phong trào Thơ mới, không thuộc Tự lực văn đoàn.",
-    "group": 28
+    "group": 28,
+    "skill": "VH"
   },
   {
     "id": 29,
@@ -1124,7 +1202,8 @@
     ],
     "answer": 3,
     "explanation": "Nguyễn Tuân, Tô Hoài, Kim Lân là nhà văn hiện đại; **Nguyễn Đình Chiểu** thuộc văn học trung đại (thế kỉ XIX).",
-    "group": 29
+    "group": 29,
+    "skill": "VH"
   },
   {
     "id": 30,
@@ -1137,7 +1216,8 @@
     ],
     "answer": 2,
     "explanation": "Huy Cận, Thế Lữ, Xuân Diệu là các nhà thơ của phong trào Thơ mới lãng mạn; **Tố Hữu** là nhà thơ cách mạng, trữ tình chính trị.",
-    "group": 30
+    "group": 30,
+    "skill": "VH"
   },
   {
     "id": 31,
@@ -1151,7 +1231,8 @@
     "answer": 0,
     "explanation": "Cách kết hợp tự nhiên và thích hợp nhất là “nhà soạn kịch **tài năng**”.",
     "passage": "<p>Lưu Quang Vũ là một trong những nhà soạn kịch ……………nhất của nền văn học nghệ thuật Việt Nam hiện đại.</p>",
-    "group": 31
+    "group": 31,
+    "skill": "DT"
   },
   {
     "id": 32,
@@ -1165,7 +1246,8 @@
     "answer": 0,
     "explanation": "Ta nói “chủ động **đề xuất** phương hướng” và “**biện pháp** giải quyết hiệu quả”.",
     "passage": "<p>Chúng ta phải chủ động………….phương hướng và ………….giải quyết hiệu quả.</p>",
-    "group": 32
+    "group": 32,
+    "skill": "DT"
   },
   {
     "id": 33,
@@ -1179,7 +1261,8 @@
     "answer": 3,
     "explanation": "Nam Cao nổi tiếng với tài **phân tích tâm lí** nhân vật tinh tế, sắc sảo.",
     "passage": "<p>Nam Cao là nhà văn có biệt tài diễn tả, phân tích…………nhân vật tinh tế, sắc sảo.</p>",
-    "group": 33
+    "group": 33,
+    "skill": "DT"
   },
   {
     "id": 34,
@@ -1193,7 +1276,8 @@
     "answer": 0,
     "explanation": "Mùa lá rụng trong vườn của Ma Văn Kháng là một **tiểu thuyết**.",
     "passage": "<p>Mùa lá rụng trong vườn là cuốn …………được tặng Giải thưởng Hội nhà văn Việt Nam năm 1986.</p>",
-    "group": 34
+    "group": 34,
+    "skill": "DT"
   },
   {
     "id": 35,
@@ -1207,7 +1291,8 @@
     "answer": 1,
     "explanation": "Nguyên văn Tuyên ngôn độc lập: “một dân tộc đã **gan góc** chống ách nô lệ của Pháp hơn tám mươi năm nay”.",
     "passage": "<p>“Một dân tộc đã……………chống ách nô lệ của Pháp hơn tám mươi năm nay, một dân tộc đã gan góc đứng về phe đồng minh chống phát-xít mấy năm nay, dân tộc đó phải được tự do! Dân tộc đó phải được độc lập”</p><p class=\"pcite\">(Trích <i>Tuyên ngôn độc lập</i> – Hồ Chí Minh)</p>",
-    "group": 35
+    "group": 35,
+    "skill": "DT"
   },
   {
     "id": 36,
@@ -1221,7 +1306,8 @@
     "answer": 3,
     "explanation": "Hồn Trương Ba khẩn khoản nhờ Đế Thích giúp để thoát khỏi cảnh “hồn Trương Ba, da hàng thịt”: đó là **khát vọng sống đẹp, tự giải phóng tâm hồn**.",
     "passage": "<p><b>Hồn Trương Ba:</b> Ông hãy trả lời đi! Ông có giúp tôi không? Nếu ông từ chối, tôi sẽ... Tôi đã nhất quyết! Ông phải giúp tôi!</p><p><b>Đế Thích:</b> Trả thân xác này cho anh hàng thịt... và thế là...</p><p><b>Hồn Trương Ba:</b> Không còn cái vật quái gở mang tên “Hồn Trương Ba, da hàng thịt” nữa.</p><p class=\"pcite\">(Trích <i>Hồn Trương Ba da hàng thịt</i> – Lưu Quang Vũ, Ngữ văn 12, Tập một, NXB Giáo dục)</p>",
-    "group": 36
+    "group": 36,
+    "skill": "PT"
   },
   {
     "id": 37,
@@ -1235,7 +1321,8 @@
     "answer": 1,
     "explanation": "Đoạn văn tả “nước xô đá, đá xô sóng, sóng xô gió” dài hàng cây số, đặc trưng của **ghềnh Hát Loóng**.",
     "passage": "<p>“Dài hàng cây số nước xô đá, đá xô sóng, sóng xô gió, cuồn cuộn luồng gió gùn ghè suốt năm như lúc nào cũng đòi nợ xuýt bất cứ người lái đò sông Đà nào tóm được qua đấy. Quãng này mà khinh suất tay lái thì cũng dễ lật ngửa bụng thuyền ra”.</p><p class=\"pcite\">(Trích <i>Người lái đò Sông Đà</i> – Nguyễn Tuân, Ngữ văn 12, Tập một, NXB Giáo dục)</p>",
-    "group": 37
+    "group": 37,
+    "skill": "PT"
   },
   {
     "id": 38,
@@ -1249,7 +1336,8 @@
     "answer": 3,
     "explanation": "Ánh sáng ít ỏi, “thưa thớt từng hột sáng” giữa bóng tối bao trùm gợi **những kiếp người nghèo khổ, nhỏ bé** nơi phố huyện.",
     "passage": "<p>Đêm tối đối với Liên quen lắm, chị không sợ nó nữa. Tối hết cả, con đường thăm thẳm ra sông, con đường qua chợ về nhà, các ngõ vào làng lại sẫm đen hơn nữa. Giờ chỉ còn ngọn đèn con của chị Tí, và cái bếp lửa của bác Siêu chiếu sáng một vùng đất cát; trong cửa hàng, ngọn đèn của Liên, ngọn đèn vặn nhỏ, thưa thớt từng hột sáng lọt qua phên nứa. Tất cả phố xá trong huyện bây giờ thu nhỏ lại nơi hàng nước của chị Tí. Thêm được một gia đình bác xẩm ngồi trên manh chiếu, cái thau sắt trắng để trước mặt, nhưng bác chưa hát vì chưa có khách nghe.</p><p class=\"pcite\">(Trích “<i>Hai đứa trẻ</i>” – Thạch Lam, Ngữ văn 11, Tập một, NXB Giáo dục)</p>",
-    "group": 38
+    "group": 38,
+    "skill": "PT"
   },
   {
     "id": 39,
@@ -1263,7 +1351,8 @@
     "answer": 3,
     "explanation": "Vũ Trọng Phụng phối hợp **đối lập, giễu nhại và lật tẩy** để phơi bày sự giả dối trong đám tang.",
     "passage": "<p>Ông ta khóc quá, muốn lặng đi thì may có Xuân đỡ khỏi ngã. Nó chật vật mãi cũng không làm cho ông đứng hẳn lên được. Dưới cái khăn trắng to tướng, cái áo thụng trắng loè xòe, ông phán cứ oặt người đi, khóc mãi không thôi.</p><p>- Hứt!... Hứt!... Hứt!...</p><p>Xuân Tóc Đỏ muốn bỏ quách ra chợt thấy ông Phán dúi vào tay nó một cái giấy bạc năm đồng gấp tư... Nó nắm tay cho khỏi có người nom thấy, rồi đi tìm cụ Tăng Phú lạc trong đám ba trăm người đương buồn rầu và đau đớn về những điều sơ suất của khổ chủ.</p><p class=\"pcite\">(Trích <i>Hạnh phúc của một tang gia</i> – Vũ Trọng Phụng, Ngữ văn 11, Tập 1, NXB Giáo dục)</p>",
-    "group": 39
+    "group": 39,
+    "skill": "BP"
   },
   {
     "id": 40,
@@ -1277,7 +1366,8 @@
     "answer": 3,
     "explanation": "Đoạn trích kể sự việc (**tự sự**), tả hành động của lão đàn ông và người đàn bà (**miêu tả**) và bộc lộ sự kinh ngạc của nhân vật tôi (**biểu cảm**).",
     "passage": "<p>Lão đàn ông lập tức trở nên hùng hổ, mặt đỏ gay, lão rút trong người ra một chiếc thắt lưng của lính ngụy ngày xưa, có vẻ như những điều phải nói với nhau họ đã nói hết, chẳng nói chẳng rằng lão trút cơn giận như lửa cháy bằng cách dùng chiếc thắt lưng quật tới tấp vào lưng người đàn bà, lão vừa đánh vừa thở hồng hộc, hai hàm răng nghiến ken két, cứ mỗi nhát quất xuống lão lại nguyền rủa bằng cái giọng rên rỉ đau đớn: Mày chết đi cho ông nhờ. Chúng mày chết hết đi cho ông nhờ!</p><p>Người đàn bà với một vẻ cam chịu đầy nhẫn nhục, không hề kêu một tiếng, không chống trả, cũng không tìm cách chạy trốn.</p><p>Tất cả mọi việc xảy đến khiến tôi kinh ngạc đến mức, trong mấy phút đầu, tôi cứ đứng há mồm ra mà nhìn. Thế rồi chẳng biết từ bao giờ, tôi đã vứt chiếc máy ảnh xuống đất chạy nhào tới.”</p><p class=\"pcite\">(Trích <i>Chiếc thuyền ngoài xa</i> – Nguyễn Minh Châu)</p>",
-    "group": 40
+    "group": 40,
+    "skill": "PC"
   },
   {
     "id": 41,
@@ -1291,7 +1381,8 @@
     "answer": 0,
     "explanation": "Bị thương nhưng Việt vẫn bò đi vì “trận đánh đang gọi”: nổi bật là phẩm chất **anh hùng**.",
     "passage": "<p>Việt đã bò đi được một đoạn, cây súng đẩy đi trước, hai cùi tay lôi người theo. Việt cũng không biết rằng mình đang bò đi nữa, chính trận đánh đang gọi Việt đến. Phía đó là sự sống. Tiếng súng đã đem lại sự sống cho đêm vắng lặng. Ở đó có các anh đang chờ Việt, đạn ta đang đổ lên đầu giặc Mỹ những đám lửa dữ dội, và những mũi lê nhọn hoắt trong đêm đang bắt đầu xung phong...</p><p class=\"pcite\">(<i>Những đứa con trong gia đình</i> – Nguyễn Thi, Ngữ văn 12, Tập hai, NXB Giáo dục)</p>",
-    "group": 41
+    "group": 41,
+    "skill": "PT"
   },
   {
     "id": 42,
@@ -1305,7 +1396,8 @@
     "answer": 1,
     "explanation": "Kẻ thù đã dùng vũ khí, nhân dân buộc phải **dùng bạo lực cách mạng để chống lại bạo lực phản cách mạng**.",
     "passage": "<p>Tnú không cứu được vợ được con. Tối đó Mai chết. Còn đứa con thì đã chết rồi. Thằng lính to béo đánh một cây sắt vào ngang bụng nó, lúc mẹ nó ngã xuống, không kịp che cho nó. Nhớ không Tnú, mày cũng không cứu sống được vợ mày. Còn mày thì chúng nó bắt mày, trong tay mày chỉ có hai bàn tay trắng, chúng nó trói mày lại. Còn tau thì lúc đó đứng đằng sau gốc cây vả. Tau thấy chúng nó trói mày bằng dây rừng. Tau không nhảy ra cứu mày. Tau cũng chỉ có hai bàn tay không. Tau không ra, tau quay đi vào rừng, đi tìm giáo mác. Nghe rõ chưa, các con rõ chưa. Nhớ lấy, ghi lấy. Sau này tau chết rồi, bay còn sống phải nói cho con cháu. Chúng nó đã cầm súng mình phải cầm giáo!…</p><p class=\"pcite\">(Trích <i>Rừng Xà Nu</i> – Nguyễn Trung Thành, Ngữ văn 12, Tập hai, NXB Giáo dục)</p>",
-    "group": 42
+    "group": 42,
+    "skill": "PT"
   },
   {
     "id": 43,
@@ -1319,7 +1411,8 @@
     "answer": 3,
     "explanation": "Chi tiết cho thấy Đẩu bắt đầu nhận ra phải **nhìn nhận thực tế** đời sống chứ không chỉ dựa vào sách vở, giấy tờ, lí thuyết.",
     "passage": "<p>Viên chánh án huyện rời chiếc bàn xếp đến phát ngốt lên những chồng hồ sơ, giấy má. Đẩu đi đi lại lại trong phòng, hai tay thọc sâu vào hai bên túi chiếc quần quân phục đã cũ. Một cái gì mới vừa vỡ ra trong đầu vị Bao Công của cái phố huyện vùng biển, lúc này trông Đẩu rất nghiêm nghị và đầy suy nghĩ.</p><p class=\"pcite\">(Trích <i>Chiếc thuyền ngoài xa</i> – Nguyễn Minh Châu, Ngữ văn 12, Tập hai, NXB Giáo dục)</p>",
-    "group": 43
+    "group": 43,
+    "skill": "PT"
   },
   {
     "id": 44,
@@ -1333,7 +1426,8 @@
     "answer": 2,
     "explanation": "Tiếng “Chặc, kệ!” là quyết định đón nhận người đàn bà, bất chấp nghèo đói: thể hiện **khát vọng hạnh phúc chính đáng** của con người.",
     "passage": "<p>Nói thế Tràng cũng tưởng là nói đùa, ai ngờ thị về thật. Mới đầu anh chàng cũng chợn, nghĩ: thóc gạo này đến cái thân mình cũng chả biết có nuôi nổi không, lại còn đèo bòng. Sau không biết nghĩ thế nào hắn chặc lưỡi một cái:</p><p>- Chặc, kệ!</p><p>Hôm ấy hắn đưa thị vào chợ tỉnh bỏ tiền ra mua cho thị cái thúng con đựng vài thứ lặt vặt và ra hàng cơm đánh một bữa thật no nê rồi cùng đẩy xe bò về...</p><p class=\"pcite\">(Trích đoạn trích <i>Vợ nhặt</i>, Kim Lân, SGK Ngữ văn lớp 12, tập 1)</p>",
-    "group": 44
+    "group": 44,
+    "skill": "PT"
   },
   {
     "id": 45,
@@ -1347,7 +1441,8 @@
     "answer": 0,
     "explanation": "Đây là lời **cụ Mết** nói với Tnú về sức sống của rừng xà nu, cũng là sức sống của dân làng Xô Man.",
     "passage": "<p>Nhưng lành hết rồi chớ? Được. Ngón tay còn hai đốt cũng bắn súng được. Mày có đi qua chỗ rừng xà nu gần con nước lớn không? Nó vẫn sống đấy. Không có cây gì mạnh bằng cây xà nu đất ta. Cây mẹ ngã, cây con mọc lên. Đố nó giết hết rừng xà nu này!…</p><p class=\"pcite\">(Trích <i>Rừng Xà nu</i>, Nguyễn Trung Thành, SGK Ngữ văn lớp 12 tập 2)</p>",
-    "group": 45
+    "group": 45,
+    "skill": "PT"
   },
   {
     "id": 46,
@@ -1361,7 +1456,8 @@
     "answer": 0,
     "explanation": "Theo đáp án của đề, màu hồng của ánh sương mai gợi **niềm tin vào sự thay đổi** trong gia đình hàng chài nhiều mâu thuẫn.",
     "passage": "<p>“Không những trong bộ lịch năm ấy mà mãi mãi về sau, tấm ảnh chụp của tôi vẫn còn được treo ở nhiều nơi, nhất là trong các gia đình sành nghệ thuật. Quái lạ, tuy là ảnh đen trắng nhưng mỗi lần ngắm kỹ, tôi vẫn thấy hiện lên cái màu hồng hồng của ánh sương mai lúc bấy giờ tôi nhìn thấy từ bãi xe tăng hỏng, và nếu nhìn lâu hơn, bao giờ tôi cũng thấy người đàn bà ấy đang bước ra khỏi tấm ảnh, đó là một người đàn bà vùng biển cao lớn với những đường nét thô kệch tấm lưng áo bạc phếch có miếng vá, nửa thân dưới ướt sũng khuôn mặt rỗ đã nhợt trắng vì kéo lưới suốt đêm. Mụ bước những bước chậm rãi, bàn chân dậm trên mặt đất chắc chắn, hòa lẫn trong đám đông.”</p><p class=\"pcite\">(Trích <i>Chiếc thuyền ngoài xa</i> – Nguyễn Minh Châu, Ngữ văn 12, Tập hai, NXB Giáo dục)</p>",
-    "group": 46
+    "group": 46,
+    "skill": "PT"
   },
   {
     "id": 47,
@@ -1375,7 +1471,8 @@
     "answer": 0,
     "explanation": "Hình ảnh đoàn người đói và lá cờ đỏ ám ảnh Tràng cho thấy anh bắt đầu **hướng tới cách mạng**.",
     "passage": "<p>Hôm ấy hắn láng máng nghe người ta nói họ là Việt Minh đấy. Họ đi cướp thóc đấy. Tràng không hiểu gì sợ quá, kéo vội xe thóc của Liên đoàn tắt cánh động đi lối khác. À ra họ đi phá kho thóc chia cho người đói. Tự dưng hắn thấy ân hận, tiếc rẻ vẩn vơ, khó hiểu.</p><p>Ngoài đình tiếng trống thúc thuế vẫn dồn dập. Mẹ và vợ Tràng đã buông đũa đứng dậy.</p><p>Trong óc Tràng vẫn thấy đám người đói và lá cờ đỏ bay phấp phới…</p><p class=\"pcite\">(Trích đoạn trích <i>Vợ nhặt</i>, Kim Lân, SGK Ngữ văn lớp 12, tập 2)</p>",
-    "group": 47
+    "group": 47,
+    "skill": "PT"
   },
   {
     "id": 48,
@@ -1389,7 +1486,8 @@
     "answer": 1,
     "explanation": "Câu văn ngắn, đứng riêng như một **bản lề**: khép lại quãng đời tủi nhục và mở ra con đường tự giải thoát của Mị.",
     "passage": "<p>Đám than đã vạc hẳn lửa. Mị không thổi cũng không đứng lên. Mị nhớ lại đời mình. Mị tưởng tượng như có thể một lúc nào, biết đâu A Phủ chẳng trốn được rồi, lúc đó bố con thống lý sẽ đổ là Mị đã cởi trói cho nó, Mị liền phải trói thay vào đấy. Mị chết trên cái cọc ấy. Nghĩ thế, nhưng làm sao Mị cũng không thấy sợ… Trong nhà tối bưng, Mị rón rén bước lại, A Phủ vẫn nhắm mắt. Nhưng Mị tưởng như A Phủ biết có người bước lại… Mị rút con dao nhỏ cắt lúa, cắt nút dây mây. A Phủ thở phè từng hơi, như rắn thở, không biết mê hay tỉnh. Lần lần, đến lúc gỡ được hết dây trói ở người A Phủ thì Mị cũng hốt hoảng. Mị chỉ thì thào được một tiếng “Đi đi…” rồi Mị nghẹn lại. A Phủ khuỵu xuống không bước nổi. Nhưng trước cái chết có thể đến nơi ngay, A Phủ lại quật sức vùng lên, chạy.</p><p>Mị đứng lặng trong bóng tối.</p><p>Trời tối lắm. Mị vẫn băng đi. Mị đuổi kịp A Phủ, đã lăn, chạy xuống tới lưng dốc</p><p class=\"pcite\">(Trích <i>Vợ chồng A Phủ</i> – Tô Hoài, Ngữ văn 12, Tập hai, NXB Giáo dục)</p>",
-    "group": 48
+    "group": 48,
+    "skill": "PT"
   },
   {
     "id": 49,
@@ -1403,7 +1501,8 @@
     "answer": 2,
     "explanation": "Những cây xà nu bị bom đạn tàn phá vẫn vươn lên nhanh chóng: biểu tượng cho **sức sống mãnh liệt** của dân làng Xô Man.",
     "passage": "<p>Nhưng cũng có những cây vượt lên được cao hơn đầu người, cành lá xum xuê như những con chim đã đủ lông mao, lông vũ. Đạn đại bác không giết nổi chúng, nhưng vết thương của chúng chóng lành như trên một thân thể cường tráng. Chúng vượt lên rất nhanh, thay thế những cây đã ngã… Cứ thế hai ba năm nay, rừng xà nu ưỡn tấm ngực lớn của mình ra, che chở cho làng…</p><p class=\"pcite\">(<i>Rừng xà nu</i> – Nguyễn Trung Thành, Ngữ văn 12, Tập hai, NXB Giáo dục)</p>",
-    "group": 49
+    "group": 49,
+    "skill": "PT"
   },
   {
     "id": 50,
@@ -1417,10 +1516,10 @@
     "answer": 2,
     "explanation": "Mị không còn cam chịu: thà chết còn hơn sống tủi nhục, cho thấy **ý thức phản kháng đã trỗi dậy** trong Mị.",
     "passage": "<p>Mị trẻ lắm. Mị vẫn còn trẻ. Mị muốn đi chơi. Bao nhiêu người có chồng cũng đi chơi ngày Tết. Huống chi A Sử với Mị, không có lòng mà vẫn phải ở với nhau! Nếu có nắm lá ngón trong tay lúc này, Mị sẽ ăn cho chết ngay, chứ không buồn nhớ lại nữa. Nhớ lại chỉ thấy nước mắt ứa ra.</p><p class=\"pcite\">(Tô Hoài, <i>Vợ chồng A Phủ</i>, SGK Ngữ văn 12, tập hai, NXB GD, 2020)</p>",
-    "group": 50
+    "group": 50,
+    "skill": "PT"
   }
 ];
-
         let state = {
             questions: [],       // Processed array with shuffled options
             userAnswers: {},     // qId -> selectedIndex
@@ -2165,6 +2264,7 @@
             document.getElementById('headerTotal').innerText = state.questions.length;
             document.getElementById('scoreTotal').innerText = state.questions.length;
             renderScoreCard(correctCount, state.questions.length);
+            renderWeakness();
             document.getElementById('modalCorrect').innerText = correctCount;
             document.getElementById('modalIncorrect').innerText = incorrectCount;
             document.getElementById('modalSkipped').innerText = skippedCount;
@@ -2200,6 +2300,71 @@
             { n: 'Tiếng Việt & kiến thức văn học', a: 21, b: 35 },
             { n: 'Phân tích ngữ liệu văn học', a: 36, b: 50 }
         ];
+
+        // ===== Phân tích điểm yếu kiến thức =====
+        const SKILLS = {
+            PC: { n: 'Phong cách, phương thức & thao tác lập luận', tip: 'Học bảng đặc điểm các phong cách ngôn ngữ và phương thức biểu đạt; nhận diện nhanh qua từ ngữ và mục đích của văn bản.' },
+            BP: { n: 'Biện pháp tu từ & nghệ thuật', tip: 'Ôn dấu hiệu nhận biết: so sánh, ẩn dụ, hoán dụ, nhân hoá, điệp, liệt kê, nói giảm nói tránh; chú ý các phương án ghép đôi.' },
+            ND: { n: 'Nội dung chính & thông điệp đoạn trích', tip: 'Luyện gạch từ khoá từng đoạn, tìm câu chủ đề; loại phương án đúng chi tiết nhưng không bao quát cả đoạn.' },
+            TN: { n: 'Từ vựng & ngữ pháp', tip: 'Ôn từ láy, từ trái nghĩa, thành ngữ, nghĩa của từ, kiểu câu và cách phân nhóm nghĩa của từ.' },
+            LS: { n: 'Phát hiện lỗi dùng từ, diễn đạt', tip: 'Soi kĩ lỗi chính tả, từ Hán Việt dùng sai, từ thừa hoặc trùng lặp, sai logic và sai phong cách.' },
+            DT: { n: 'Điền từ thích hợp', tip: 'Đọc trọn câu để nắm sắc thái và kết hợp từ; thử lần lượt từng phương án vào chỗ trống.' },
+            VH: { n: 'Văn học sử, tác giả & thể loại', tip: 'Lập bảng tác giả – tác phẩm – thể loại – giai đoạn; nhớ các nhóm như Tự lực văn đoàn, Thơ mới, văn học hiện thực.' },
+            PT: { n: 'Phân tích chi tiết, hình ảnh trong tác phẩm', tip: 'Ôn kĩ các tác phẩm trong chương trình lớp 11–12: nhân vật, chi tiết nghệ thuật, hình ảnh và ý nghĩa tư tưởng.' }
+        };
+
+        function renderWeakness() {
+            const box = document.getElementById('weakBox');
+            if (!box) return;
+            const answered = Object.keys(state.userAnswers).length;
+            if (!answered) {
+                box.innerHTML = '<div class="wk-empty">Bạn chưa làm câu nào nên chưa thể phân tích điểm yếu.<br>Hãy làm bài rồi nộp để xem kết quả theo từng dạng kiến thức.</div>';
+                return;
+            }
+            const stat = {};
+            state.questions.forEach(q => {
+                const k = q.skill || 'VH';
+                const s = stat[k] || (stat[k] = { total: 0, ok: 0, miss: [] });
+                s.total++;
+                const done = state.userAnswers.hasOwnProperty(q.id);
+                if (done && isCorrect(q)) s.ok++; else s.miss.push({ id: q.id, skipped: !done });
+            });
+            const list = Object.keys(stat).map(k => ({ k, ...stat[k], pct: Math.round(stat[k].ok / stat[k].total * 100) }))
+                .sort((a, b) => a.pct - b.pct || b.total - a.total);
+            const lvl = p => p < 50 ? ['bad', 'Cần ôn gấp'] : p < 80 ? ['mid', 'Cần củng cố'] : ['good', 'Vững'];
+            const weak = list.filter(x => x.pct < 80);
+            let head;
+            if (!weak.length) {
+                head = '<b>Rất tốt!</b> Kiến thức của bạn khá đồng đều ở mọi dạng, chưa có điểm yếu rõ rệt. Hãy luyện thêm đề để giữ phong độ.';
+            } else {
+                const t = weak.slice(0, 2).map(x => `<b>${SKILLS[x.k].n}</b> (${x.ok}/${x.total} câu)`).join(' và ');
+                head = `Nên ưu tiên ôn: ${t}. Bấm vào số câu bên dưới để xem lại lời giải.`;
+            }
+            box.innerHTML = `<div class="wk-head">${head}</div>` + list.map((x, idx) => {
+                const [cls, label] = lvl(x.pct);
+                const chips = x.miss.length ? `<div class="wk-chips">Câu cần xem lại:` + x.miss.slice(0, 12).map(m => `<button type="button" class="${m.skipped ? 'skip' : ''}" title="${m.skipped ? 'Chưa làm' : 'Làm sai'}" onclick="jumpToQuestion(${m.id})">${m.id}</button>`).join('') + (x.miss.length > 12 ? ` +${x.miss.length - 12}` : '') + '</div>' : '';
+                const tip = x.pct < 80 && idx < 3 ? `<div class="wk-tip">💡 ${SKILLS[x.k].tip}</div>` : '';
+                return `<div class="wk-row"><div class="wk-top"><span class="wk-name">${SKILLS[x.k].n}</span><span class="wk-badge ${cls}">${label}</span><span class="wk-score">${x.ok}/${x.total}</span></div><div class="wk-bar"><i class="${cls}" data-w="${x.pct}"></i></div>${tip}${chips}</div>`;
+            }).join('');
+            requestAnimationFrame(() => requestAnimationFrame(() => box.querySelectorAll('.wk-bar i').forEach(el => { el.style.width = el.dataset.w + '%'; })));
+        }
+
+        function switchResultTab(name) {
+            const weak = name === 'weak';
+            document.getElementById('tabOverview').hidden = weak;
+            document.getElementById('tabWeak').hidden = !weak;
+            document.getElementById('tabBtnOverview').classList.toggle('on', !weak);
+            document.getElementById('tabBtnWeak').classList.toggle('on', weak);
+        }
+
+        function jumpToQuestion(id) {
+            closeResultModal();
+            setTimeout(() => {
+                const el = document.getElementById('question-card-' + id);
+                if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 90, behavior: 'smooth' });
+            }, 380);
+        }
+
         function renderScoreCard(points, total) {
             const pct = total ? points / total : 0;
             document.getElementById('scoreTotal').innerText = total;
@@ -2226,6 +2391,8 @@
             modal.classList.remove('opacity-0', 'pointer-events-none');
             modal.children[0].classList.remove('scale-95');
             modal.children[0].classList.add('scale-100');
+            document.documentElement.classList.add('result-open');
+            switchResultTab('overview');
             enterResultFullscreen();
         }
 
@@ -2251,6 +2418,7 @@
             modal.classList.add('opacity-0', 'pointer-events-none');
             modal.children[0].classList.remove('scale-100');
             modal.children[0].classList.add('scale-95');
+            document.documentElement.classList.remove('result-open');
             exitResultFullscreen();
             scrollToFirstQuestion();   // đóng bảng kết quả cũng về câu 1
         }
